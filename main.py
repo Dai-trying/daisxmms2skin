@@ -199,7 +199,7 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
             test_file_name2 = urllib.parse.unquote(test_file_name)
 
             if os.path.isfile(test_file_name2):
-                if my_func.set_id3_tag(test_file_name2, value) == False:
+                if my_func.set_id3_tag(test_file_name2, value) is False:
                     QMessageBox.information(self, 'FILE PERMISSION ERROR', "I cannot write the information to the file,"
                                                                            "\nit is likely that I do not have "
                                                                            "sufficient priviliges.")
