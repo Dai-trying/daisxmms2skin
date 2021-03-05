@@ -83,7 +83,7 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
 
     def __init__(self, parent=None):
         super(DaiClient, self).__init__(parent)
-        self.VERSION = "0.0.1-15"
+        self.VERSION = "0.0.2-0"
         self.setup_ui(self)
         self.My_Library = []
         self.Play_Lists = []
