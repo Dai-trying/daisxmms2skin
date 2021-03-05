@@ -20,7 +20,7 @@
 import os
 import sys
 import xmmsclient
-import commands
+import subprocess
 from xmmsclient import collections as c
 
 
@@ -30,10 +30,12 @@ def start_xmms2d():
 
 
 def is_running(process):
-    output = commands.getoutput('ps -A')
-    if process in output:
+    try:
+        call = subprocess.check_output("pidof '{}'".format(process), shell=True)
         return True
-    return False
+    except subprocess.CalledProcessError:
+        return False
+
 
 if not is_running("xmms2d"):
     start_xmms2d()

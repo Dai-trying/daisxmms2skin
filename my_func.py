@@ -23,9 +23,10 @@ from PyQt5.Qt import QColor
 from PyQt5.QtWidgets import QInputDialog, QFileDialog
 from xmmsclient import xmmsvalue
 import os
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 from mutagen.id3 import ID3, TIT2, TALB, TPOS, TPE2, TPE1, TRCK, TCON, ID3NoHeaderError
 import mutagen
+
 if not os.path.isdir(os.path.join(os.path.expanduser('~'), ".config/daixmmsdata")):
     try:
         os.makedirs(os.path.join(os.path.expanduser('~'), ".config/daixmmsdata"))
@@ -127,7 +128,7 @@ def load_now_playing(self):
         track = get_info_by_ml_id(self, np)
         add_row_to_table(self.tableNowPlaying, track)
     current_row = xmmsfun.xmms_get_now_playing_pl_id()
-    if current_row is not False and current_row.value()['position'] is not -1:
+    if current_row is not False and current_row.value()['position'] != -1:
         highlight_row(self, current_row.value()['position'])
 
 
@@ -280,13 +281,13 @@ def clean_track(track):
         album_artist = "Unknown"
     try:
         if track['duration'] is None:
-            duration = "Unknown"
+            duration = 0
         else:
             duration = track['duration']
     except AttributeError:
-        duration = "Unknown"
+        duration = 0
     except KeyError:
-        duration = "Unknown"
+        duration = 0
     try:
         if track['timesplayed'] is None:
             times_played = "Unknown"
@@ -319,104 +320,104 @@ def clean_track_result(track):
     :return: dict
     """
     try:
-        ml_id = track.value()['id']
+        ml_id = track.value()[('server', 'id')]
     except AttributeError:
         ml_id = "Unknown"
     try:
-        if track.value()['partofset'] is None:
+        if track.value()[('plugin/id3v2', 'partofset')] is None:
             pos = 0
         else:
-            pos = track.value()['partofset']
+            pos = track.value()[('plugin/id3v2', 'partofset')]
     except AttributeError:
         pos = 0
     except KeyError:
         pos = 0
     try:
-        if track.value()['tracknr'] is None:
+        if track.value()[('plugin/id3v2', 'tracknr')] is None:
             tracknr = 0
         else:
-            tracknr = track.value()['tracknr']
+            tracknr = track.value()[('plugin/id3v2', 'tracknr')]
     except AttributeError:
         tracknr = 0
     except KeyError:
         tracknr = 0
     try:
-        if track.value()['title'] is None:
+        if track.value()[('plugin/id3v2', 'title')] is None:
             title = "Unknown"
         else:
-            title = track.value()['title']
+            title = track.value()[('plugin/id3v2', 'title')]
     except AttributeError:
         title = "Unknown"
     except KeyError:
         title = "Unknown"
     try:
-        if track.value()['artist'] is None:
+        if track.value()[('plugin/id3v2', 'artist')] is None:
             artist = "Unknown"
         else:
-            artist = track.value()['artist']
+            artist = track.value()[('plugin/id3v2', 'artist')]
     except AttributeError:
         artist = "Unknown"
     except KeyError:
         artist = "Unknown"
     try:
-        if track.value()['album'] is None:
+        if track.value()[('plugin/id3v2', 'album')] is None:
             album = "Unknown"
         else:
-            album = track.value()['album']
+            album = track.value()[('plugin/id3v2', 'album')]
     except AttributeError:
         album = "Unknown"
     except KeyError:
         album = "Unknown"
     try:
-        if track.value()['genre'] is None:
+        if track.value()[('plugin/id3v2', 'genre')] is None:
             genre = "Unknown"
         else:
-            genre = track.value()['genre']
+            genre = track.value()[('plugin/id3v2', 'genre')]
     except AttributeError:
         genre = "Unknown"
     except KeyError:
         genre = "Unknown"
     try:
-        if track.value()['bitrate'] is None:
+        if track.value()[('plugin/mad', 'bitrate')] is None:
             bitrate = "Unknown"
         else:
-            bitrate = track.value()['bitrate']
+            bitrate = track.value()[('plugin/mad', 'bitrate')]
     except AttributeError:
         bitrate = "Unknown"
     except KeyError:
         bitrate = "Unknown"
     try:
-        if track.value()['performer'] is None:
+        if track.value()[('plugin/id3v2', 'performer')] is None:
             album_artist = "Unknown"
         else:
-            album_artist = track.value()['performer']
+            album_artist = track.value()[('plugin/id3v2', 'performer')]
     except AttributeError:
         album_artist = "Unknown"
     except KeyError:
         album_artist = "Unknown"
     try:
-        if track.value()['duration'] is None:
-            duration = "Unknown"
+        if track.value()[('plugin/mad', 'duration')] is None:
+            duration = 0
         else:
-            duration = track.value()['duration']
+            duration = track.value()[('plugin/mad', 'duration')]
     except AttributeError:
-        duration = "Unknown"
+        duration = 0
     except KeyError:
-        duration = "Unknown"
+        duration = 0
     try:
-        if track.value()['timesplayed'] is None:
+        if track.value()[('server', 'timesplayed')] is None:
             times_played = "Unknown"
         else:
-            times_played = track.value()['timesplayed']
+            times_played = track.value()[('server', 'timesplayed')]
     except AttributeError:
         times_played = "Unknown"
     except KeyError:
         times_played = "Unknown"
     try:
-        if track.value()['size'] is None:
+        if track.value()[('plugin/gvfs', 'size')] is None:
             file_size = "Unknown"
         else:
-            file_size = track.value()['size']
+            file_size = track.value()[('plugin/gvfs', 'size')]
     except AttributeError:
         file_size = "Unknown"
     except KeyError:
@@ -494,7 +495,7 @@ def highlight_row(self, this_row):
     :return: bool
     """
     all_rows = self.tableNowPlaying.rowCount()
-    for row in xrange(0, all_rows):
+    for row in range(0, all_rows):
         self.tableNowPlaying.item(row, 0).setBackground(QColor(255, 255, 255))
         self.tableNowPlaying.item(row, 1).setBackground(QColor(255, 255, 255))
         self.tableNowPlaying.item(row, 2).setBackground(QColor(255, 255, 255))
@@ -507,7 +508,7 @@ def highlight_row(self, this_row):
         self.tableNowPlaying.item(row, 9).setBackground(QColor(255, 255, 255))
         self.tableNowPlaying.item(row, 10).setBackground(QColor(255, 255, 255))
         self.tableNowPlaying.item(row, 11).setBackground(QColor(255, 255, 255))
-    if this_row is -1:
+    if this_row == -1:
         return False
     try:
         self.tableNowPlaying.item(this_row, 0).setBackground(QColor(47, 127, 255))
@@ -534,9 +535,7 @@ def playlist_changed(self, result):
     :param result: XmmsResult Object
     :return: None
     """
-    # print("Playlist Changed")
     if result.value()["type"] == 0:
-        # print("    Add " + str(result.value()))
         if result.value()['name'] == "Default":
             insert_row_to_table(result.value()['position'], self.tableNowPlaying,
                                 get_info_by_ml_id(self, result.value()['id']))
@@ -547,7 +546,6 @@ def playlist_changed(self, result):
         else:
             add_ml_id_to_playlists(self, result.value()['id'], result.value()['name'])
     elif result.value()["type"] == 1:
-        # print("    Insert " + str(result.value()))
         if result.value()['name'] == "Default":
             insert_row_to_table(result.value()['position'], self.tableNowPlaying,
                                 get_info_by_ml_id(self, result.value()['id']))
@@ -558,7 +556,6 @@ def playlist_changed(self, result):
         else:
             add_ml_id_to_playlists(self, result.value()['id'], result.value()['name'])
     elif result.value()["type"] == 2:
-        # print("    Shuffle " + str(result.value()))
         if result.value()['name'] == "Default":
             self.tableNowPlaying.setRowCount(0)
             load_now_playing(self)
@@ -571,7 +568,6 @@ def playlist_changed(self, result):
             refresh_playlists(self, result.value()['name'])
             self.combo_pl_names.setCurrentIndex(self.combo_pl_names.findText(this_list))
     elif result.value()["type"] == 3:
-        # print("    Remove" + str(result.value()))
         if result.value()['name'] == "Default":
             self.tableNowPlaying.removeRow(result.value()['position'])
         elif result.value()['name'] == self.combo_pl_names.currentText():
@@ -580,7 +576,6 @@ def playlist_changed(self, result):
         else:
             remove_position_from_playlists(self, result.value()['position'], result.value()['name'])
     elif result.value()["type"] == 4:
-        # print("    Clear " + str(result.value()))
         if result.value()['name'] == "Default":
             self.tableNowPlaying.setRowCount(0)
             if xmmsfun.xmms_get_play_status().value() == 1:
@@ -591,14 +586,11 @@ def playlist_changed(self, result):
         else:
             clear_playlist(self, result.value()['name'])
     elif result.value()["type"] == 5:
-        # print("    Move " + str(result.value()))
         if result.value()['name'] == "Default":
-            # print("Default")
             self.tableNowPlaying.removeRow(result.value()['position'])
             insert_row_to_table(result.value()['newposition'], self.tableNowPlaying,
                                 get_info_by_ml_id(self, result.value()['id']))
         elif result.value()['name'] == self.combo_pl_names.currentText():
-            # print("playlist")
             self.table_pl_entries.removeRow(result.value()['position'])
             insert_row_to_table(result.value()['newposition'], self.table_pl_entries,
                                 get_info_by_ml_id(self, result.value()['id']))
@@ -608,7 +600,6 @@ def playlist_changed(self, result):
             move_position_in_playlists(self, result.value()['name'], result.value()['position'],
                                        result.value()['newposition'])
     elif result.value()["type"] == 6:
-        # print("    Sort " + str(result.value()))
         if result.value()['name'] == "Default":
             self.tableNowPlaying.setRowCount(0)
             load_now_playing(self)
@@ -621,7 +612,6 @@ def playlist_changed(self, result):
             refresh_playlists(self, result.value()['name'])
             self.combo_pl_names.setCurrentIndex(self.combo_pl_names.findText(this_list))
     elif result.value()["type"] == 7:
-        # print("    Playlist Update " + str(result.value()))
         pass
 
 
@@ -632,23 +622,18 @@ def collection_changed(self, result):
     :param result: XmmsResult
     :return: None
     """
-    # print("Collection Changed")
     if result.value()['namespace'] == "Playlists":
         if result.value()['type'] == 0:
-            # print("    Added " + str(result.value()))
             add_new_play_list_to_playlists(self, result.value()['name'])
             this_pl = self.combo_pl_names.currentText()
             refresh_playlist_combo(self)
             self.combo_pl_names.setCurrentIndex(self.combo_pl_names.findText(this_pl))
         elif result.value()['type'] == 1:
-            # print("    Collection Update " + str(result.value()))
             pass
         elif result.value()['type'] == 2:
-            # print("    ReNamed " + str(result.value()))
             rename_playlist(self, result.value()['name'], result.value()['newname'])
             refresh_playlist_combo(self)
         elif result.value()['type'] == 3:
-            # print("    Removed " + str(result.value()))
             self.Play_Lists[:] = [d for d in self.Play_Lists if d.get("Name") != result.value()['name']]
             refresh_playlist_combo(self)
         else:
@@ -839,7 +824,6 @@ def refresh_playlists(self, play_list):
     pl_ids = xmmsfun.xmms_get_playlist_entries(play_list)
     if pl_ids is not False:
         self.Play_Lists.append({"Name": play_list, "Ids": pl_ids.value()})
-        # print("playlist refreshed")
         index = self.combo_pl_names.findText(play_list)
         self.combo_pl_names.setCurrentIndex(index)
 
@@ -1008,8 +992,8 @@ def find_rows_in_table(table, ml_id):
     :return: int (row int table)
     """
     lives_at = []
-    for row in xrange(table.rowCount()):
-        for column in xrange(1):
+    for row in range(table.rowCount()):
+        for column in range(1):
             item = table.item(row, column)
             if item and item.text() == str(ml_id):
                 lives_at.append(table.indexFromItem(item).row())
@@ -1021,8 +1005,8 @@ def find_rows_in_table(table, ml_id):
 
 def find_row_in_table(table, ml_id):
     lives_at = False
-    for row in xrange(table.rowCount()):
-        for column in xrange(1):
+    for row in range(table.rowCount()):
+        for column in range(1):
             item = table.item(row, column)
             if item and item.text() == str(ml_id):
                 lives_at = table.indexFromItem(item)
@@ -1124,7 +1108,7 @@ def add_new_playlist(self):
     :return: string or bool(False) on error
     """
     pl_name = show_dialog(self, 'Input Dialog', 'Name for new playlist:')
-    if pl_name is None or str(pl_name) is "":
+    if pl_name is None or str(pl_name) == "":
         return False
     else:
         xmmsfun.xmms_create_playlist(str(pl_name))
@@ -1232,7 +1216,7 @@ def remove_entry_from_playlist(self):
     :param self:
     :return: None
     """
-    if self.table_pl_entries.currentRow() is not -1:
+    if self.table_pl_entries.currentRow() != -1:
         plist = self.combo_pl_names.currentText()
         pl_item = self.table_pl_entries.currentRow()
         xmmsfun.xmms_remove_entry_from_playlist(int(pl_item), str(plist))
@@ -1295,7 +1279,6 @@ def update_new_changed_ml_id_list(self, ml_id_list):
             else:
                 self.My_Library.append(track)
                 add_row_to_table(self.tableMediaLibrary, track)
-            # print(str(ml_id) + " Added to My Library")
             if ml_id in self.added_ml_ids:
                 self.added_ml_ids.remove(ml_id)
             self.changed_ml_ids.remove(ml_id)
@@ -1390,15 +1373,15 @@ def save_col_sizes(self):
     config = SafeConfigParser()
     config.read(conf_file)
     for spec in specs:
-        if spec is 'table_ml_columns_size':
+        if spec == 'table_ml_columns_size':
             for row in the_rows:
                 if self.tableMediaLibrary.columnWidth(row) != 0:
                     config.set(spec, str(row), (str(self.tableMediaLibrary.columnWidth(row))))
-        elif spec is 'table_pl_columns_size':
+        elif spec == 'table_pl_columns_size':
             for row in the_rows:
                 if self.table_pl_entries.columnWidth(row) != 0:
                     config.set(spec, str(row), (str(self.table_pl_entries.columnWidth(row))))
-        elif spec is 'table_np_columns_size':
+        elif spec == 'table_np_columns_size':
             for row in the_rows:
                 if self.tableNowPlaying.columnWidth(row) != 0:
                     config.set(spec, str(row), (str(self.tableNowPlaying.columnWidth(row))))
@@ -1450,25 +1433,23 @@ def set_id3_tag(filename, my_dict):
     def set_key_values():
         for key, val in my_dict.iteritems():
             if key == "album":
-                tags["TALB"] = TALB(encoding=3, text=unicode(val))
+                tags["TALB"] = TALB(encoding=3, text=str(val))
             elif key == "title":
-                tags["TIT2"] = TIT2(encoding=3, text=unicode(val))
+                tags["TIT2"] = TIT2(encoding=3, text=str(val))
             elif key == "partofset":
-                tags["TPOS"] = TPOS(encoding=3, text=unicode(val))
+                tags["TPOS"] = TPOS(encoding=3, text=str(val))
             elif key == "performer":
-                tags["TPE2"] = TPE2(encoding=3, text=unicode(val))
+                tags["TPE2"] = TPE2(encoding=3, text=str(val))
             elif key == "artist":
-                tags["TPE1"] = TPE1(encoding=3, text=unicode(val))
+                tags["TPE1"] = TPE1(encoding=3, text=str(val))
             elif key == "tracknr":
-                tags["TRCK"] = TRCK(encoding=3, text=unicode(val))
+                tags["TRCK"] = TRCK(encoding=3, text=str(val))
             elif key == "genre":
-                tags["TCON"] = TCON(encoding=3, text=unicode(val))
+                tags["TCON"] = TCON(encoding=3, text=str(val))
 
-    # print(my_dict)
     try:
         tags = ID3(filename)
     except ID3NoHeaderError:
-        # print "Adding ID3 header;",
         tags = ID3()
 
     set_key_values()

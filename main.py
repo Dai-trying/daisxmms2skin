@@ -32,6 +32,7 @@ import urllib
 
 # noinspection PyUnresolvedReferences
 import resource_rc
+from urllib.parse import urlparse
 
 
 class EditId3Tag(QDialog, my_base.Ui_EditId3Info):
@@ -187,7 +188,6 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
 
         ml_id = self.tableMediaLibrary.item(song.row(), 0).text()
         track_info = my_func.get_info_by_ml_id(self, int(ml_id))
-        # print(track_info)
 
         dlg = EditId3Tag(self, track_info, sorted(self.genre_list, key=lambda s: s.lower()))
         if dlg.exec_():
@@ -195,8 +195,8 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
 
             file_info = my_func.get_xmms_db_info(int(ml_id))
             file_with_path = file_info.value()['url'].replace("file://", "")
-            test_file_name = urllib.unquote_plus(file_with_path)
-            test_file_name2 = urllib.unquote(test_file_name)
+            test_file_name = urllib.parse.unquote_plus(file_with_path)
+            test_file_name2 = urllib.parse.unquote(test_file_name)
 
             if os.path.isfile(test_file_name2):
                 if my_func.set_id3_tag(test_file_name2, value) == False:
@@ -260,11 +260,9 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
         descending.setIcon(pl_icon_descending)
         action = menu.exec_(self.combo_pl_names.mapToGlobal(position))
         if action == ascending:
-            # print("Ascending selected")
             col = self.my_props[self.table_pl_entries.columnAt(position.x())]
             xmmsfun.xmms_sort_playlist(self.combo_pl_names.currentText(), col)
         elif action == descending:
-            # print("Descending selected")
             col = self.my_props[self.table_pl_entries.columnAt(position.x())]
             xmmsfun.xmms_reverse_sort_playlist(self.combo_pl_names.currentText(), col)
 
@@ -306,16 +304,12 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
             add_to_current.setEnabled(False)
         action = menu.exec_(self.combo_pl_names.mapToGlobal(position))
         if action == play_now:
-            # print("Play this one now :- " + self.combo_pl_names.currentText())
             my_func.play_list_now(self)
         if action == add_to_current:
-            # print("Add this one to Now Playing :- " + self.combo_pl_names.currentText())
             my_func.add_play_list_to_now(self)
         if action == new_playlist:
-            # print("I want to add a new playlist")
             my_func.add_new_playlist(self)
         if action == create_from_albums:
-            # print("Create play lists from Album names")
             my_func.make_playlists_from_albums(self)
 
     def open_ml_menu(self, position):
@@ -439,15 +433,12 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
         my_func.load_pl_entries_table(self)
 
     def bc_col_ch(self, result):
-        # print("Broadcast collection changed() " + str(result.value()))
         my_func.collection_changed(self, result)
 
     def bc_cnf_vl_ch(self, result):
-        # print("Broadcast config value changed() " + str(result.value()))
         pass
 
     def bc_mi_rd_st(self, result):
-        # print("        Broadcast media info reader status() " + str(result.value()))
         if result.value() == 1:
             self.reader_status = "Busy"
         elif result.value() == 0:
@@ -455,16 +446,12 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
             my_func.update_new_changed_ml_id_list(self, deepcopy(self.changed_ml_ids))
 
     def bc_ml_en_ad(self, result):
-        # print("Broadcast media lib entry added() " + str(result.value()))
         if my_func.is_in_library(self, result.value()):
-            # print("Got it already " + str(result.value()))
             pass
         else:
-            # print("Add to self.added_ml_ids " + str(result.value()))
             self.added_ml_ids.append(result.value())
 
     def bc_ml_en_ch(self, result):
-        # print("Broadcast media lib entry changed() " + str(result.value()))
         if self.reader_status == "Available":
             my_func.update_ml_id(self, result.value())
         else:
@@ -474,27 +461,21 @@ class DaiClient(QMainWindow, my_base.UiMainWindow):
                 self.changed_ml_ids.append(result.value())
 
     def bc_pb_cu_id(self, result):
-        # print("broadcast playback current id() " + str(result.value()))
         my_func.set_now_stuff_from_broadcast(self, result)
 
     def bc_pb_st(self, result):
-        # print("Broadcast playback status() " + str(result.value()))
         my_func.play_status_control(self, result)
 
     def bc_pb_vo_ch(self, result):
-        # print("Broadcast playback volume changed() " + str(result.value()))
         pass
 
     def bc_pl_ch(self, result):
-        # print("Broadcast playlist changed() " + str(result.value()))
         my_func.playlist_changed(self, result)
 
     def bc_pl_cu_ps(self, result):
-        # print("Broadcast playlist current pos() " + str(result.value()))
         my_func.playlist_position_change(self, result)
 
     def bc_pl_ld(self, result):
-        # print("Broadcast playlist loaded() " + str(result.value()))
         pass
 
     def closeEvent(self, event):
@@ -507,6 +488,7 @@ def main():
     form = DaiClient()
     form.show()
     app.exec_()
+
 
 if __name__ == '__main__':
     main()
