@@ -320,104 +320,151 @@ def clean_track_result(track):
     :return: dict
     """
     try:
-        ml_id = track.value()[('server', 'id')]
+        ml_id = [track.value()[key] for key in track.value().keys() if key[1] == 'id'][0]
+        # ml_id = track.value()[('server', 'id')]
     except AttributeError:
         ml_id = "Unknown"
+    except IndexError:
+        ml_id = "Unknown"
     try:
-        if track.value()[('plugin/id3v2', 'partofset')] is None:
+        # if track.value()[('plugin/id3v2', 'partofset')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'partofset'][0] is None:
             pos = 0
         else:
-            pos = track.value()[('plugin/id3v2', 'partofset')]
+            pos = [track.value()[key] for key in track.value().keys() if key[1] == 'partofset'][0]
+            # pos = track.value()[('plugin/id3v2', 'partofset')]
+    except IndexError:
+        pos = 0
     except AttributeError:
         pos = 0
     except KeyError:
         pos = 0
     try:
-        if track.value()[('plugin/id3v2', 'tracknr')] is None:
+        # if track.value()[('plugin/id3v2', 'tracknr')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'tracknr'][0] is None:
             tracknr = 0
         else:
-            tracknr = track.value()[('plugin/id3v2', 'tracknr')]
+            tracknr = [track.value()[key] for key in track.value().keys() if key[1] == 'tracknr'][0]
+            # tracknr = track.value()[('plugin/id3v2', 'tracknr')]
+    except IndexError:
+        tracknr = 0
     except AttributeError:
         tracknr = 0
     except KeyError:
         tracknr = 0
     try:
-        if track.value()[('plugin/id3v2', 'title')] is None:
+        # if track.value()[('plugin/id3v2', 'title')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'title'][0] is None:
             title = "Unknown"
         else:
-            title = track.value()[('plugin/id3v2', 'title')]
+            title = [track.value()[key] for key in track.value().keys() if key[1] == 'title'][0]
+            # title = track.value()[('plugin/id3v2', 'title')]
+    except IndexError:
+        title = "Unknown"
     except AttributeError:
         title = "Unknown"
     except KeyError:
         title = "Unknown"
     try:
-        if track.value()[('plugin/id3v2', 'artist')] is None:
+        # if track.value()[('plugin/id3v2', 'artist')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'artist'][0] is None:
             artist = "Unknown"
         else:
-            artist = track.value()[('plugin/id3v2', 'artist')]
+            artist = [track.value()[key] for key in track.value().keys() if key[1] == 'artist'][0]
+            # artist = track.value()[('plugin/id3v2', 'artist')]
+    except IndexError:
+        artist = "Unknown"
     except AttributeError:
         artist = "Unknown"
     except KeyError:
         artist = "Unknown"
     try:
-        if track.value()[('plugin/id3v2', 'album')] is None:
+        # if track.value()[('plugin/id3v2', 'album')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'album'][0] is None:
             album = "Unknown"
         else:
-            album = track.value()[('plugin/id3v2', 'album')]
+            album = [track.value()[key] for key in track.value().keys() if key[1] == 'album'][0]
+            # album = track.value()[('plugin/id3v2', 'album')]
+    except IndexError:
+        album = "Unknown"
     except AttributeError:
         album = "Unknown"
     except KeyError:
         album = "Unknown"
     try:
-        if track.value()[('plugin/id3v2', 'genre')] is None:
+        # if track.value()[('plugin/id3v2', 'genre')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'genre'][0] is None:
             genre = "Unknown"
         else:
-            genre = track.value()[('plugin/id3v2', 'genre')]
+            genre = [track.value()[key] for key in track.value().keys() if key[1] == 'genre'][0]
+            # genre = track.value()[('plugin/id3v2', 'genre')]
+    except IndexError:
+        genre = "Unknown"
     except AttributeError:
         genre = "Unknown"
     except KeyError:
         genre = "Unknown"
     try:
-        if track.value()[('plugin/mad', 'bitrate')] is None:
+        # if track.value()[('plugin/mad', 'bitrate')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'bitrate'][0] is None:
             bitrate = "Unknown"
         else:
-            bitrate = track.value()[('plugin/mad', 'bitrate')]
+            bitrate = [track.value()[key] for key in track.value().keys() if key[1] == 'bitrate'][0]
+            # bitrate = track.value()[('plugin/mad', 'bitrate')]
+    except IndexError:
+        bitrate = "Unknown"
     except AttributeError:
         bitrate = "Unknown"
     except KeyError:
         bitrate = "Unknown"
     try:
-        if track.value()[('plugin/id3v2', 'performer')] is None:
+        # if track.value()[('plugin/id3v2', 'performer')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'performer'][0] is None:
             album_artist = "Unknown"
         else:
-            album_artist = track.value()[('plugin/id3v2', 'performer')]
+            album_artist = [track.value()[key] for key in track.value().keys() if key[1] == 'performer'][0]
+            # album_artist = track.value()[('plugin/id3v2', 'performer')]
+    except IndexError:
+        album_artist = "Unknown"
     except AttributeError:
         album_artist = "Unknown"
     except KeyError:
         album_artist = "Unknown"
     try:
-        if track.value()[('plugin/mad', 'duration')] is None:
+        # if track.value()[('plugin/mad', 'duration')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'duration'][0] is None:
             duration = 0
         else:
-            duration = track.value()[('plugin/mad', 'duration')]
+            duration = [track.value()[key] for key in track.value().keys() if key[1] == 'duration'][0]
+            # duration = track.value()[('plugin/mad', 'duration')]
+    except IndexError:
+        duration = 0
     except AttributeError:
         duration = 0
     except KeyError:
         duration = 0
     try:
-        if track.value()[('server', 'timesplayed')] is None:
+        # if track.value()[('server', 'timesplayed')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'timesplayed'][0] is None:
             times_played = "Unknown"
         else:
-            times_played = track.value()[('server', 'timesplayed')]
+            times_played = [track.value()[key] for key in track.value().keys() if key[1] == 'timesplayed'][0]
+            # times_played = track.value()[('server', 'timesplayed')]
+    except IndexError:
+        times_played = "Unknown"
     except AttributeError:
         times_played = "Unknown"
     except KeyError:
         times_played = "Unknown"
     try:
-        if track.value()[('plugin/gvfs', 'size')] is None:
+        # if track.value()[('plugin/gvfs', 'size')] is None:
+        if [track.value()[key] for key in track.value().keys() if key[1] == 'size'][0] is None:
             file_size = "Unknown"
         else:
-            file_size = track.value()[('plugin/gvfs', 'size')]
+            file_size = [track.value()[key] for key in track.value().keys() if key[1] == 'size'][0]
+            # file_size = track.value()[('plugin/gvfs', 'size')]
+    except IndexError:
+        file_size = "Unknown"
     except AttributeError:
         file_size = "Unknown"
     except KeyError:
