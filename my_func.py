@@ -1455,7 +1455,7 @@ def get_xmms_db_info(ml_id):
 
 def set_id3_tag(filename, my_dict):
     def set_key_values():
-        for key, val in my_dict.iteritems():
+        for key, val in my_dict.items():
             if key == "album":
                 tags["TALB"] = TALB(encoding=3, text=str(val))
             elif key == "title":

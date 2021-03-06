@@ -125,6 +125,7 @@ class MyTable(QtWidgets.QTableWidget):
         self.setItem(pos, 11, QTableWidgetItem(my_func.convert_to_size(c12)))
 
 
+# noinspection PyAttributeOutsideInit
 class UiChoose(object):
     def set_up_ui(self, choose):
         choose.setObjectName("Choose")
@@ -1008,6 +1009,7 @@ class UiMainWindow(object):
         # QtCore.QMetaObject.connectSlotsByName(main_window)
 
 
+# noinspection PyAttributeOutsideInit
 class Ui_EditId3Info(object):
     def setupUi(self, EditId3Info):
         EditId3Info.setObjectName("EditId3Info")
